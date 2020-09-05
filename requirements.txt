@@ -1,3 +1,2 @@
-Flask==1.1.0
-Flask-SQLAlchemy
-Flask-Script
+Flask=1.1.2
+pyrebase
