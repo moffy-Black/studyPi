@@ -5,7 +5,7 @@ import json
 
 from studyPi.models import User
 
-with open("firebaseConfig.json") as f:
+with open("studyPi/firebaseConfig.json") as f:
     firebaseConfig = json.loads(f.read())
 firebase = pyrebase.initialize_app(firebaseConfig)
 
@@ -24,12 +24,12 @@ def login():
     session['usr'] = email
 
     # ---studyPi's Function---
-    # ur = User(
-    #   email=email,
-    #   password=password
-    # )
-    # db.session.add(ur)
-    # db.session.commit()
+    ur = User(
+      email=email,
+      password=password
+    )
+    db.session.add(ur)
+    db.session.commit()
     return redirect(url_for('index'))
   except:
     return render_template("login.html", msg="メールアドレスまたはパスワードが間違っています。")
@@ -43,5 +43,9 @@ def index():
 
 @app.route('/logout')
 def logout():
+  usr = session.get('usr')
+  obj = User.query.filter_by(email='{}'.format(usr)).one()
+  db.session.delete(obj)
+  db.session.commit()
   del session['usr']
   return redirect(url_for('login'))
