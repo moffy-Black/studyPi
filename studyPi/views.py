@@ -21,7 +21,6 @@ def login():
   try:
     # ---Firebase's Function---
     user = auth.sign_in_with_email_and_password(email, password)
-    session['usr'] = email
 
     # ---studyPi's Function---
     ur = User(
@@ -36,16 +35,15 @@ def login():
 
 @app.route("/", methods=['GET'])
 def index():
-  usr = session.get('usr')
+  usr = User.query.get(1).email
   if usr == None:
     return redirect(url_for('login'))
   return render_template("index.html", usr=usr)
 
 @app.route('/logout')
 def logout():
-  usr = session.get('usr')
+  usr = User.query.get(1).email
   obj = User.query.filter_by(email='{}'.format(usr)).one()
   db.session.delete(obj)
   db.session.commit()
-  del session['usr']
   return redirect(url_for('login'))
