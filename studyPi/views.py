@@ -35,10 +35,11 @@ def login():
 
 @app.route("/", methods=['GET'])
 def index():
-  usr = User.query.get(1).email
-  if usr == None:
+  # usr = User.query.get(1).email
+  usr = User.query.all()
+  if not usr:
     return redirect(url_for('login'))
-  return render_template("index.html", usr=usr)
+  return render_template("index.html", usr=usr[0])
 
 @app.route('/logout')
 def logout():
