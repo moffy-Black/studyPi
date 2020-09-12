@@ -3,26 +3,44 @@ import time
 import RPi.GPIO as GPIO
 
 INTERVAL = 1
-SLEEPTIME = 1
+SLEEPTIME = 0
 GPIO_PIN = 18
+SENSOR_COUNT = 0
+SNESOR_DISCOUNT = 0
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GPIO_PIN,GPIO.IN)
 
 if __name__ == '__main__':
   try:
-    cnt = 1
+    
     while True:
       if(GPIO.input(GPIO_PIN) == GPIO.HIGH):
-        print(datetime.now().strftime('%Y/%m/%d %H:%M:%S') +
-        "：" + str("{0:05d}".format(cnt)) + "回目の人感知")
-        cnt = cnt + 1
-        time.sleep(SLEEPTIME)
-      else:
-        print(GPIO.input(GPIO_PIN))
+        print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
+        now = datetime.now()
+        SENSOR_COUNT += SNESOR_DISCOUNT + 1
+        SNESOR_DISCOUNT = 0
+        SLEEPTIME = 0
         time.sleep(INTERVAL)
+      else:
+        SNESOR_DISCOUNT += 1
+        SLEEPTIME += 1
+        print(SLEEPTIME)
+        time.sleep(INTERVAL)
+        if SLEEPTIME >= 20:
+          break
   except KeyboardInterrupt:
-    print("終了処理中...")
+    pass
+    
   finally:
+    s = SENSOR_COUNT
+    date = now.strftime('%Y-%m-%d')
+    term = s // 60
+    time = now.strftime('%H:%M')
     GPIO.cleanup()
     print("GPIO clean完了")
+
+  Now = datetime.now()
+  year = Now.year
+  month = Now.month
+  day = Now.day
