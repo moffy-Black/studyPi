@@ -1,7 +1,14 @@
 from datetime import datetime
 import time
 import RPi.GPIO as GPIO
+import pyrebase
+import json
 
+with open("./firebaseConfig.json") as f:
+    firebaseConfig = json.loads(f.read())
+firebase = pyrebase.initialize_app(firebaseConfig)
+
+db = firebase.database()
 INTERVAL = 1
 SLEEPTIME = 0
 GPIO_PIN = 18
@@ -37,10 +44,11 @@ if __name__ == '__main__':
     date = now.strftime('%Y-%m-%d')
     term = s // 60
     time = now.strftime('%H:%M')
+    push_date = {
+      "date": date,
+      "term": term,
+      "time": time
+    }
+    records = db.child("records").child("bz5pWlLkslU1TM7YReke8OSuxSM2").push(push_date)
     GPIO.cleanup()
     print("GPIO clean完了")
-
-  Now = datetime.now()
-  year = Now.year
-  month = Now.month
-  day = Now.day
