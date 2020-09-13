@@ -79,7 +79,7 @@ def time_measure():
         SNESOR_DISCOUNT += 1
         SLEEPTIME += 1
         time.sleep(INTERVAL)
-        if SLEEPTIME >= 20:
+        if SLEEPTIME >= 300:
           break
   except KeyboardInterrupt:
     pass
