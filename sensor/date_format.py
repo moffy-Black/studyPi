@@ -1,6 +1,7 @@
-# import datetime
-import pyrebase
-import json
+from datetime import datetime
+import time
+# import pyrebase
+# import json
 # s = 350
 # m = s // 60
 # h = m // 60
@@ -15,10 +16,16 @@ import json
 # print(Now.strftime('%Y-%m-%d'))
 # print(Now.strftime('%H:%M'))
 
-with open("./firebaseConfig.json") as f:
-    firebaseConfig = json.loads(f.read())
-firebase = pyrebase.initialize_app(firebaseConfig)
+# with open("./firebaseConfig.json") as f:
+#     firebaseConfig = json.loads(f.read())
+# firebase = pyrebase.initialize_app(firebaseConfig)
 
-db = firebase.database()
-records = db.child("records").child("bz5pWlLkslU1TM7YReke8OSuxSM2").get()
-print(records.val())
+# db = firebase.database()
+# records = db.child("records").child("bz5pWlLkslU1TM7YReke8OSuxSM2").get()
+# print(records.val())
+
+now = datetime.now()
+time.sleep(1)
+future = datetime.now()
+d = future - now
+print(d.total_seconds())
