@@ -9,11 +9,12 @@ with open("./firebaseConfig.json") as f:
 firebase = pyrebase.initialize_app(firebaseConfig)
 
 db = firebase.database()
-INTERVAL = 1
-SLEEPTIME = 0
+
 GPIO_PIN = 18
-SENSOR_COUNT = 0
-SNESOR_DISCOUNT = 0
+catch = datetime.now()
+release = datetime.now()
+T = 0
+d = 0
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GPIO_PIN,GPIO.IN)
@@ -23,27 +24,23 @@ if __name__ == '__main__':
     
     while True:
       if(GPIO.input(GPIO_PIN) == GPIO.HIGH):
-        print(datetime.now().strftime('%Y/%m/%d %H:%M:%S'))
-        now = datetime.now()
-        SENSOR_COUNT += SNESOR_DISCOUNT + 1
-        SNESOR_DISCOUNT = 0
-        SLEEPTIME = 0
-        time.sleep(INTERVAL)
+        catch = datetime.now()
+        T += d
+        d = 0
       else:
-        SNESOR_DISCOUNT += 1
-        SLEEPTIME += 1
-        print(SLEEPTIME)
-        time.sleep(INTERVAL)
-        if SLEEPTIME >= 20:
+        release = datetime.now()
+        DELTA = release - catch
+        d = DELTA.total_seconds()
+        if d >= 20.0:
           break
   except KeyboardInterrupt:
     pass
     
   finally:
-    s = SENSOR_COUNT
-    date = now.strftime('%Y-%m-%d')
+    s = T
+    date = release.strftime('%Y-%m-%d')
     term = s // 60
-    time = now.strftime('%H:%M')
+    time = release.strftime('%H:%M')
     push_date = {
       "date": date,
       "term": term,
@@ -51,4 +48,4 @@ if __name__ == '__main__':
     }
     records = db.child("records").child("bz5pWlLkslU1TM7YReke8OSuxSM2").push(push_date)
     GPIO.cleanup()
-    print("GPIO clean完了")
+    print(T)

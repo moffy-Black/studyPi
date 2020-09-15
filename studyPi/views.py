@@ -58,37 +58,35 @@ def study():
 import time
 def time_measure():
   database = firebase.database()
-  INTERVAL = 1
-  SLEEPTIME = 0
+  
   GPIO_PIN = 18
-  SENSOR_COUNT = 0
-  SNESOR_DISCOUNT = 0
-  now = datetime.now()
+  catch = datetime.now()
+  release = datetime.now()
+  T = 0
+  d = 0
 
   GPIO.setmode(GPIO.BCM)
   GPIO.setup(GPIO_PIN,GPIO.IN)
   try:
     while True:
       if(GPIO.input(GPIO_PIN) == GPIO.HIGH):
-        now = datetime.now()
-        SENSOR_COUNT += SNESOR_DISCOUNT + 1
-        SNESOR_DISCOUNT = 0
-        SLEEPTIME = 0
-        time.sleep(INTERVAL)
+        catch = datetime.now()
+        T += d
+        d = 0
       else:
-        SNESOR_DISCOUNT += 1
-        SLEEPTIME += 1
-        time.sleep(INTERVAL)
-        if SLEEPTIME >= 60:
+        release = datetime.now()
+        DELTA = release - catch
+        d = DELTA.total_seconds()
+        if d >= 20.0:
           break
   except KeyboardInterrupt:
     pass
     
   finally:
-    s = SENSOR_COUNT
-    date = now.strftime('%Y-%m-%d')
+    s = int(T)
+    date = release.strftime('%Y-%m-%d')
     term = str(s // 60)
-    Ntime = now.strftime('%H:%M')
+    Ntime = release.strftime('%H:%M')
     push_date = {
       "date": date,
       "term": term,
