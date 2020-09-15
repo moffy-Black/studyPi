@@ -3,7 +3,10 @@ import time
 import RPi.GPIO as GPIO
 import pyrebase
 import json
-import sqlite3
+
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+from studyPi import app,db
+from studyPi.models import User
 
 with open("./firebaseConfig.json") as f:
     firebaseConfig = json.loads(f.read())
@@ -11,26 +14,18 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 
 db = firebase.database()
 
-# for time_measure value
+GPIO_PIN = 18
 catch = datetime.now()
 release = datetime.now()
 T = 0
 d = 0
 
-# GPIO_sensor
-GPIO_PIN = 18
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GPIO_PIN,GPIO.IN)
 
-# connect flask_db
-conn = sqlite3.connect(r'/home/moffy/enviroment/flask/studyPi/studyPi.db')
-c = conn.cursor()
-db_list = c.fetchone()
-user_id = db_list[1]
-
-
 if __name__ == '__main__':
   try:
+    
     while True:
       if(GPIO.input(GPIO_PIN) == GPIO.HIGH):
         catch = datetime.now()
@@ -55,6 +50,6 @@ if __name__ == '__main__':
       "term": term,
       "time": time
     }
-    records = db.child("records").child(user_id).push(push_date)
+    records = db.child("records").child("bz5pWlLkslU1TM7YReke8OSuxSM2").push(push_date)
     GPIO.cleanup()
     print(T)
