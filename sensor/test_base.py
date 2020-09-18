@@ -12,11 +12,12 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 db = firebase.database()
 
 # for time_measure value
-catch = datetime.now()
+
 release = datetime.now()
 T = 0
 d = 0
 flag = True
+judge = True
 
 # GPIO_sensor
 GPIO_PIN = 18
@@ -34,32 +35,40 @@ user_id = db_list[1]
 if __name__ == '__main__':
   while flag:
     try:
-      while True:
+      catch = datetime.now()
+      while judge:
         if(GPIO.input(GPIO_PIN) == GPIO.HIGH):
-          catch = datetime.now()
           T += d
           d = 0
+          time.sleep(1)
+          print("Yes")
         else:
           release = datetime.now()
           DELTA = release - catch
           d = DELTA.total_seconds()
-          if d >= 20.0:
-            break
+          if d >= 30.0:
+            judge = False
+          time.sleep(1)
+          print("No")
     except KeyboardInterrupt:
       flag = False
       
     finally:
       s = T
-      date = release.strftime('%Y-%m-%d')
-      term = s // 60
-      time = release.strftime('%H:%M')
-      push_date = {
-        "date": date,
-        "term": term,
-        "time": time
-      }
-      records = db.child("records").child(user_id).push(push_date)
+      if s >= 10:
+        date = release.strftime('%Y-%m-%d')
+        term = s // 60
+        Ntime = release.strftime('%H:%M')
+        push_date = {
+          "date": date,
+          "term": term,
+          "time": Ntime
+        }
+        # records = db.child("records").child(user_id).push(push_date)
+      print(s)
+      T = 0
       d = 0
+      judge = True
   conn.close()
   GPIO.cleanup()
 
