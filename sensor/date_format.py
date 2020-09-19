@@ -1,31 +1,23 @@
 from datetime import datetime
 import time
-# import pyrebase
-# import json
-# s = 350
-# m = s // 60
-# h = m // 60
-# value = m
+import RPi.GPIO as GPIO
 
-# Now = datetime.datetime.now()
-# year = Now.year
-# month = Now.month
-# day = Now.day
-# date = str(year) + "-" + str(month) + "-" + str(day)
-# print(value)
-# print(Now.strftime('%Y-%m-%d'))
-# print(Now.strftime('%H:%M'))
+GPIO_PIN = 18
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(GPIO_PIN,GPIO.IN)
+second = 0
 
-# with open("./firebaseConfig.json") as f:
-#     firebaseConfig = json.loads(f.read())
-# firebase = pyrebase.initialize_app(firebaseConfig)
+while True:
+  try:
+    if GPIO.input(GPIO_PIN) == GPIO.HIGH:
+      print("high")
+      time.sleep(1)
+    else:
+      print("low")
+      time.sleep(1)
+  except KeyboardInterrupt:
+    break
 
-# db = firebase.database()
-# records = db.child("records").child("bz5pWlLkslU1TM7YReke8OSuxSM2").get()
-# print(records.val())
-
-now = datetime.now()
-time.sleep(1)
-future = datetime.now()
-d = future - now
-print(d.total_seconds())
+    for i in range(5):
+      array[i] = GPIO.input(GPIO_PIN)
+      time.sleep(1)
