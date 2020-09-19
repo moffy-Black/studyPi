@@ -6,24 +6,18 @@ GPIO_PIN = 18
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(GPIO_PIN,GPIO.IN)
 second = 0
-flag = True
-judge = True
 
-if __name__ == '__main__':
-  while judge:
-    try:
-      while flag:
-        if (GPIO.input(GPIO_PIN) == GPIO.HIGH):
-          print("Yes")
-          time.sleep(10)
-          second += 10
-        elif second >= 60:
-          flag = False 
-        else:
-          print("No")
-          time.sleep(10)
-          second += 10
-    except KeyboardInterrupt:
-      judge = False
-    finally:
-      print("finish")
+while True:
+  try:
+    if GPIO.input(GPIO_PIN) == GPIO.HIGH:
+      print("high")
+      time.sleep(1)
+    else:
+      print("low")
+      time.sleep(1)
+  except KeyboardInterrupt:
+    break
+
+    for i in range(5):
+      array[i] = GPIO.input(GPIO_PIN)
+      time.sleep(1)
