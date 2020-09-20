@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session
+from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
 from studyPi import app,db
 import pyrebase
 import json
@@ -7,6 +7,7 @@ from datetime import datetime
 import RPi.GPIO as GPIO
 
 from studyPi.models import User
+from studyPi.camera import Camera
 
 with open("studyPi/firebaseConfig.json") as f:
     firebaseConfig = json.loads(f.read())
@@ -50,47 +51,20 @@ def logout():
   db.session.commit()
   return redirect(url_for('login'))
 
-@app.route('/study')
-def study():
-  time_measure()
-  return redirect(url_for('logout'))
+@app.route("/stream")
+def stream():
+  return render_template("stream.html")
 
-import time
-def time_measure():
-  database = firebase.database()
-  
-  GPIO_PIN = 18
-  catch = datetime.now()
-  release = datetime.now()
-  T = 0
-  d = 0
+def gen(camera):
+  while True:
+    frame = camera.get_frame()
+    if frame is not None:
+      yield (b"--frame\r\n"
+      b"Content-Type: image/jpeg\r\n\r\n" + frame.tobytes() + b"\r\n")
+    else:
+      print("frame is None")
 
-  GPIO.setmode(GPIO.BCM)
-  GPIO.setup(GPIO_PIN,GPIO.IN)
-  try:
-    while True:
-      if(GPIO.input(GPIO_PIN) == GPIO.HIGH):
-        catch = datetime.now()
-        T += d
-        d = 0
-      else:
-        release = datetime.now()
-        DELTA = release - catch
-        d = DELTA.total_seconds()
-        if d >= 20.0:
-          break
-  except KeyboardInterrupt:
-    pass
-    
-  finally:
-    s = int(T)
-    date = release.strftime('%Y-%m-%d')
-    term = str(s // 60)
-    Ntime = release.strftime('%H:%M')
-    push_date = {
-      "date": date,
-      "term": term,
-      "time": Ntime
-    }
-    records = database.child("records").child(User.query.get(1).local_id).push(push_date)
-    GPIO.cleanup()
+@app.route("/video_feed")
+def video_feed():
+  return Response(gen(Camera()),
+  mimetype="multipart/x-mixed-replace; boundary=frame")
