@@ -23,7 +23,7 @@ c.execute("select * from users")
 db_list = c.fetchone()
 
 # for time_measure value
-starttime = None
+start_time = None
 array = [0]*5
 
 if __name__ == '__main__':
@@ -34,29 +34,25 @@ if __name__ == '__main__':
       array[i] = GPIO.input(GPIO_PIN)
       time.sleep(1)
     if array[0] == GPIO.HIGH or array[1] == GPIO.HIGH or array[2] == GPIO.HIGH or  array[3] == GPIO.HIGH or  array[4] == GPIO.HIGH:
-      if starttime is None:
-        starttime = datetime.now()
+      if start_time is None:
+        start_time = datetime.now()
       time.sleep(55)
     else:
-      if starttime is None:
+      if start_time is None:
         time.sleep(55)
       else:
-        finishtime = datetime.now()
-        deltatime = finishtime - starttime
-        deltasecond = deltatime.total_seconds()
-        starttime = None
-        if deltasecond >= 60:
-          print(deltasecond)
-          user_id = db_list[1]
-          date = finishtime.strftime('%Y-%m-%d')
-          term = deltasecond // 60
-          Ntime = finishtime.strftime('%H:%M')
-          push_date = {
-            "date": date,
-            "term": term,
-            "time": Ntime
-          }
-          records = db.child("records").child(user_id).push(push_date)
-          time.sleep(55)
-        else:
-          time.sleep(55)
+        finish_time = datetime.now()
+        delta_time = finish_time - start_time
+        delta_second = delta_time.total_seconds()
+        start_time = None
+        user_id = db_list[1]
+        date = finish_time.strftime('%Y-%m-%d')
+        term = delta_second // 60
+        Ntime = finish_time.strftime('%H:%M')
+        push_date = {
+          "date": date,
+          "term": term,
+          "time": Ntime
+        }
+        records = db.child("records").child(user_id).push(push_date)
+        time.sleep(55)
