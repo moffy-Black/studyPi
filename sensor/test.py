@@ -5,7 +5,7 @@ import pyrebase
 import json
 import sqlite3
 
-with open((r'/home/moffy/enviroment/flask/studyPi/firebaseConfig.json')) as f:
+with open(('studyPi/firebaseConfig.json')) as f:
   firebaseConfig = json.loads(f.read())
 firebase = pyrebase.initialize_app(firebaseConfig)
 
@@ -17,13 +17,13 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(GPIO_PIN,GPIO.IN)
 
 # connect flask_db
-conn = sqlite3.connect(r'/home/moffy/enviroment/flask/studyPi/studyPi.db')
+conn = sqlite3.connect('studyPi/studyPi.db')
 c = conn.cursor()
 c.execute("select * from users")
 db_list = c.fetchone()
 
-starttime = datetime.now()
-finishtime = datetime.now()
+# for time_measure value
+start_time = None
 array = [0]*5
 
 if __name__ == '__main__':
@@ -34,23 +34,25 @@ if __name__ == '__main__':
       array[i] = GPIO.input(GPIO_PIN)
       time.sleep(1)
     if array[0] == GPIO.HIGH or array[1] == GPIO.HIGH or array[2] == GPIO.HIGH or  array[3] == GPIO.HIGH or  array[4] == GPIO.HIGH:
+      if start_time is None:
+        start_time = datetime.now()
       time.sleep(55)
     else:
-      finishtime = datetime.now()
-      deltatime = finishtime - starttime
-      deltasecond = deltatime.total_seconds()
-      if deltasecond >= 60:
-        print(deltasecond)
+      if start_time is None:
+        time.sleep(55)
+      else:
+        finish_time = datetime.now()
+        delta_time = finish_time - start_time
+        delta_second = delta_time.total_seconds()
+        start_time = None
         user_id = db_list[1]
-        date = finishtime.strftime('%Y-%m-%d')
-        term = deltasecond // 60
-        Ntime = finishtime.strftime('%H:%M')
+        date = finish_time.strftime('%Y-%m-%d')
+        term = delta_second // 60
+        Ntime = finish_time.strftime('%H:%M')
         push_date = {
           "date": date,
           "term": term,
           "time": Ntime
         }
         records = db.child("records").child(user_id).push(push_date)
-        time.sleep(55)
-      else:
         time.sleep(55)
