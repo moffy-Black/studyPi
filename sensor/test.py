@@ -36,20 +36,20 @@ if __name__ == '__main__':
     if array[0] == GPIO.HIGH or array[1] == GPIO.HIGH or array[2] == GPIO.HIGH or  array[3] == GPIO.HIGH or  array[4] == GPIO.HIGH:
       if starttime is None:
         starttime = datetime.now()
-      time.sleep(5)
+      time.sleep(55)
     else:
       if starttime is None:
-        time.sleep(5)
+        time.sleep(55)
       else:
         finishtime = datetime.now()
         deltatime = finishtime - starttime
         deltasecond = deltatime.total_seconds()
         starttime = None
-        if deltasecond >= 10:
+        if deltasecond >= 60:
           print(deltasecond)
           user_id = db_list[1]
           date = finishtime.strftime('%Y-%m-%d')
-          term = deltasecond // 10
+          term = deltasecond // 60
           Ntime = finishtime.strftime('%H:%M')
           push_date = {
             "date": date,
@@ -57,6 +57,6 @@ if __name__ == '__main__':
             "time": Ntime
           }
           records = db.child("records").child(user_id).push(push_date)
-          time.sleep(5)
+          time.sleep(55)
         else:
-          time.sleep(5)
+          time.sleep(55)
