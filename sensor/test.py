@@ -44,19 +44,19 @@ if __name__ == '__main__':
       medium_time = UNO_time - start_time
       medium_second = medium_time.total_seconds()
       if medium_second <= 900:
-        ser.write("a")
+        ser.write(str.encode('g'))
       elif medium_second >900 and medium_second <= 1800:
-        ser.write("B")
+        ser.write(str.encode('h'))
       elif medium_second >1800 and medium_second <= :
-        ser.write("c")
+        ser.write(str.encode('i'))
       elif medium_second >2700 and medium_second <= 3600:
-        ser.write("d")
+        ser.write(str.encode('j'))
       elif medium_second >3600 and medium_second <= 4500:
-        ser.write("e")
+        ser.write(str.encode('k'))
       elif medium_second >4500 and medium_second <= 5400:
-        ser.write("f")
+        ser.write(str.encode('l'))
       elif medium_second >5400:
-        ser.write("g")
+        ser.write(str.encode('gm'))
       time.sleep(55)
     else:
       if start_time is None:
