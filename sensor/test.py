@@ -47,7 +47,7 @@ if __name__ == '__main__':
         ser.write(str.encode('g'))
       elif medium_second >900 and medium_second <= 1800:
         ser.write(str.encode('h'))
-      elif medium_second >1800 and medium_second <= :
+      elif medium_second >1800 and medium_second <= 2700:
         ser.write(str.encode('i'))
       elif medium_second >2700 and medium_second <= 3600:
         ser.write(str.encode('j'))
@@ -56,7 +56,7 @@ if __name__ == '__main__':
       elif medium_second >4500 and medium_second <= 5400:
         ser.write(str.encode('l'))
       elif medium_second >5400:
-        ser.write(str.encode('gm'))
+        ser.write(str.encode('m'))
       time.sleep(55)
     else:
       if start_time is None:
