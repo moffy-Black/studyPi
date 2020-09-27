@@ -7,7 +7,7 @@ from datetime import datetime
 import RPi.GPIO as GPIO
 
 from studyPi.models import User
-from studyPi.camera import Camera
+# from studyPi.camera import Camera
 
 with open("studyPi/firebaseConfig.json") as f:
     firebaseConfig = json.loads(f.read())
@@ -51,20 +51,20 @@ def logout():
   db.session.commit()
   return redirect(url_for('login'))
 
-@app.route("/stream")
-def stream():
-  return render_template("stream.html")
+# @app.route("/stream")
+# def stream():
+#   return render_template("stream.html")
 
-def gen(camera):
-  while True:
-    frame = camera.get_frame()
-    if frame is not None:
-      yield (b"--frame\r\n"
-      b"Content-Type: image/jpeg\r\n\r\n" + frame.tobytes() + b"\r\n")
-    else:
-      print("frame is None")
+# def gen(camera):
+#   while True:
+#     frame = camera.get_frame()
+#     if frame is not None:
+#       yield (b"--frame\r\n"
+#       b"Content-Type: image/jpeg\r\n\r\n" + frame.tobytes() + b"\r\n")
+#     else:
+#       print("frame is None")
 
-@app.route("/video_feed")
-def video_feed():
-  return Response(gen(Camera()),
-  mimetype="multipart/x-mixed-replace; boundary=frame")
+# @app.route("/video_feed")
+# def video_feed():
+#   return Response(gen(Camera()),
+#   mimetype="multipart/x-mixed-replace; boundary=frame")
