@@ -1,5 +1,4 @@
 from datetime import datetime
-import serial
 import time
 import RPi.GPIO as GPIO
 import pyrebase
@@ -12,38 +11,36 @@ firebase = pyrebase.initialize_app(firebaseConfig)
 
 db = firebase.database()
 
-def LED(a,b,c,d,e,f,x,y,z):
-   GPIO.output(yellow, a)
-   GPIO.output(red1, b)
-   GPIO.output(red2, c)
-   GPIO.output(red3, d)
-   GPIO.output(red4, e)
-   GPIO.output(red5, f)
-   GPIO.output(red_Pin, x)
-   GPIO.output(green_Pin, y)
-   GPIO.output(blue_Pin, z)
+def LED(n):
+  for i in range(n):
+    GPIO.output(li[i], True)
+   
+def RGB(x,y):
+  GPIO.output(red_Pin, x)
+  GPIO.output(green_Pin, y)
+  GPIO.output(blue_Pin, False)
 
 # GPIO_sensor
 GPIO.setmode(GPIO.BCM)
 
 GPIO_PIN = 18
-yellow = 26
-red1 = 19
-red2 = 13
-red3 = 10
-red4 = 17
-red5 = 12
+Pin0 = 26
+Pin1 = 19
+Pin2 = 13
+Pin3 = 10
+Pin4 = 17
+Pin5 = 12
 red_Pin = 16
 green_Pin = 20
 blue_Pin = 21
 
 GPIO.setup(GPIO_PIN,GPIO.IN)
-GPIO.setup(yellow,GPIO.OUT)
-GPIO.setup(red1,GPIO.OUT)
-GPIO.setup(red2,GPIO.OUT)
-GPIO.setup(red3,GPIO.OUT)
-GPIO.setup(red4,GPIO.OUT)
-GPIO.setup(red5,GPIO.OUT)
+GPIO.setup(Pin0,GPIO.OUT)
+GPIO.setup(Pin1,GPIO.OUT)
+GPIO.setup(Pin2,GPIO.OUT)
+GPIO.setup(Pin3,GPIO.OUT)
+GPIO.setup(Pin4,GPIO.OUT)
+GPIO.setup(Pin5,GPIO.OUT)
 GPIO.setup(red_Pin,GPIO.OUT)
 GPIO.setup(green_Pin,GPIO.OUT)
 GPIO.setup(blue_Pin,GPIO.OUT)
@@ -52,20 +49,17 @@ GPIO.setup(blue_Pin,GPIO.OUT)
 conn = sqlite3.connect('studyPi/studyPi.db')
 c = conn.cursor()
 c.execute("select * from users")
-
-# ardino settings
-# ser = serial.Serial('/dev/ttyACM0', 9600)
+db_list = c.fetchone()
 
 # for time_measure value
 start_time = None
 array = [0]*7
+li = [Pin0,Pin1,Pin2,Pin3,Pin4,Pin5]
+for i in range(6):
+  GPIO.output(li[i], False)
 
 if __name__ == '__main__':
   while True:
-    conn = sqlite3.connect('studyPi/studyPi.db')
-    c = conn.cursor()
-    c.execute("select * from users")
-    db_list = c.fetchone()
     if db_list is None:
       GPIO.cleanup()
       break
@@ -79,30 +73,31 @@ if __name__ == '__main__':
       medium_time = measure_time - start_time
       medium_second = medium_time.total_seconds()
       if medium_second <= 900:
-        # ser.write(str.encode('g'))
-        LED(True,True,True,True,True,True,False,True,False)
+        LED(6)
+        RGB(False,True)
       elif medium_second >900 and medium_second <= 1800:
-        # ser.write(str.encode('h'))
-        LED(True,True,True,True,True,False,False,True,False)
+        LED(5)
+        RGB(False,True)
       elif medium_second >1800 and medium_second <= 2700:
-        # ser.write(str.encode('i'))
-        LED(True,True,True,True,False,False,False,True,False)
+        LED(4)
+        RGB(False,True)
       elif medium_second >2700 and medium_second <= 3600:
-        # ser.write(str.encode('j'))
-        LED(True,True,True,False,False,False,False,True,False)
+        LED(3)
+        RGB(False,True)
       elif medium_second >3600 and medium_second <= 4500:
-        # ser.write(str.encode('k'))
-        LED(True,True,False,False,False,False,False,True,False)
+        LED(2)
+        RGB(False,True)
       elif medium_second >4500 and medium_second <= 5400:
-        # ser.write(str.encode('l'))
-        LED(True,False,False,False,False,False,False,True,False)
+        LED(1)
+        RGB(False,True)
       elif medium_second >5400:
-        # ser.write(str.encode('m'))
-        LED(False,False,False,False,False,False,False,True,False)
+        LED(0)
+        RGB(False,True)
       time.sleep(53)
     else:
       if start_time is None:
-        LED(False,False,False,False,False,False,True,False,False)
+        LED(0)
+        RGB(True,False)
         time.sleep(53)
       else:
         finish_time = datetime.now()
@@ -121,5 +116,10 @@ if __name__ == '__main__':
           "time": Ntime
         }
         records = db.child("records").child(user_id).push(push_date)
-        LED(False,False,False,False,False,False,True,False,False)
+        conn = sqlite3.connect('studyPi/studyPi.db')
+        c = conn.cursor()
+        c.execute("select * from users")
+        db_list = c.fetchone()
+        LED(0)
+        RGB(True,False)
         time.sleep(53)
