@@ -62,11 +62,14 @@ array = [0]*7
 
 if __name__ == '__main__':
   while True:
+    conn = sqlite3.connect('studyPi/studyPi.db')
+    c = conn.cursor()
+    c.execute("select * from users")
     db_list = c.fetchone()
     if db_list is None:
       GPIO.cleanup()
       break
-    for i in range(5):
+    for i in range(7):
       array[i] = GPIO.input(GPIO_PIN)
       time.sleep(1)
     if array[0] == GPIO.HIGH or array[1] == GPIO.HIGH or array[2] == GPIO.HIGH or  array[3] == GPIO.HIGH or  array[4] == GPIO.HIGH or array[5] == GPIO.HIGH or array[6] == GPIO.HIGH:
@@ -75,32 +78,32 @@ if __name__ == '__main__':
       measure_time = datetime.now()
       medium_time = measure_time - start_time
       medium_second = medium_time.total_seconds()
-      if medium_second <= 9:
+      if medium_second <= 900:
         # ser.write(str.encode('g'))
         LED(True,True,True,True,True,True,False,True,False)
-      elif medium_second >9 and medium_second <= 18:
+      elif medium_second >900 and medium_second <= 1800:
         # ser.write(str.encode('h'))
         LED(True,True,True,True,True,False,False,True,False)
-      elif medium_second >18 and medium_second <= 27:
+      elif medium_second >1800 and medium_second <= 2700:
         # ser.write(str.encode('i'))
         LED(True,True,True,True,False,False,False,True,False)
-      elif medium_second >27 and medium_second <= 36:
+      elif medium_second >2700 and medium_second <= 3600:
         # ser.write(str.encode('j'))
         LED(True,True,True,False,False,False,False,True,False)
-      elif medium_second >36 and medium_second <= 45:
+      elif medium_second >3600 and medium_second <= 4500:
         # ser.write(str.encode('k'))
         LED(True,True,False,False,False,False,False,True,False)
-      elif medium_second >45 and medium_second <= 54:
+      elif medium_second >4500 and medium_second <= 5400:
         # ser.write(str.encode('l'))
         LED(True,False,False,False,False,False,False,True,False)
-      elif medium_second >54:
+      elif medium_second >5400:
         # ser.write(str.encode('m'))
         LED(False,False,False,False,False,False,False,True,False)
-      time.sleep(5)
+      time.sleep(53)
     else:
       if start_time is None:
         LED(False,False,False,False,False,False,True,False,False)
-        time.sleep(5)
+        time.sleep(53)
       else:
         finish_time = datetime.now()
         delta_time = finish_time - start_time
@@ -119,4 +122,4 @@ if __name__ == '__main__':
         }
         records = db.child("records").child(user_id).push(push_date)
         LED(False,False,False,False,False,False,True,False,False)
-        time.sleep(5)
+        time.sleep(53)
