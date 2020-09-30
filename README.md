@@ -4,9 +4,15 @@
 
 ### 環境構築
 pip install -r requirements.txt //必要なモジュールをインスト―ル
+
 cd flask
+
 python
+
 >> from studyPi.models import init
+
 >>init() //dbsqlite3の作成
+
 python manage.py // サーバー立てる
+
 python sensor/test.py // センサーを動かす
