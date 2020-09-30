@@ -7,11 +7,11 @@ pip install -r requirements.txt //必要なモジュールをインスト―ル
 
 cd flask
 
-python
+python //インタプリタモードに
 
 >> from studyPi.models import init
 
->>init() //dbsqlite3の作成
+>> init() //dbsqlite3の作成
 
 python manage.py // サーバー立てる
 
