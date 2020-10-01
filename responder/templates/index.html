@@ -1,0 +1,38 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Flask app with Firebase authentification</title>
+
+  <!-- Materialize CDN -->
+
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+  <link rel="stylesheet" href="../static/style.css" type="text/css" media="all">
+
+</head>
+
+<body>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#!" class="brand-logo">studyPi</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/logout">ログアウト</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div>
+    <h1>{{ name }}さん,こんにちは！</h1>
+    <h1>勉強を始めましょう</h1>
+  </div>
+
+</body>
+
+
+</html>
