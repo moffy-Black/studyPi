@@ -56,6 +56,8 @@ def sensor_on():
   while True:
     db_list = connect_db()
     if db_list is None:
+      LED(0)
+      RGB(False,False)
       GPIO.cleanup()
       break
     for i in range(7):

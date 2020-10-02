@@ -23,9 +23,7 @@ def insert_data(local_id, name):
 def remove_data():
   # --- データを取り除く ---
   try:
-    users = session.query(
-      User
-    ).all()
+    users = session.query(User).all()
     user = users[0]
     session.delete(user)
     session.commit()
