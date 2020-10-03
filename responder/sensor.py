@@ -1,29 +1,23 @@
 from datetime import datetime
-import time
 import RPi.GPIO as GPIO
-import pyrebase
-import json
+import time
 import sqlite3
 
-with open(('firebaseConfig.json')) as f:
-  firebaseConfig = json.loads(f.read())
-firebase = pyrebase.initialize_app(firebaseConfig)
+from firebase import db
 
-db = firebase.database()
-
+# LED ON or OFF
 def LED(n):
   li = [26,19,13,10,17,12]
-  for i in range(6):
-    GPIO.output(li[i], False)
-  for i in range(n):
-    GPIO.output(li[i], True)
-   
+  [GPIO.output(i, False) for i in li]
+  [GPIO.output(li[i], True) for i in range(n)]
+
+# RGB ON or OFF
 def RGB(x,y):
   GPIO.output(16, x)
   GPIO.output(20, y)
   GPIO.output(21, False)
 
-# GPIO_sensor
+# GPIOPIN set
 def gpio_set():
   GPIO.setmode(GPIO.BCM)
 
@@ -38,9 +32,7 @@ def gpio_set():
   GPIO.setup(20,GPIO.OUT)
   GPIO.setup(21,GPIO.OUT)
 
-  
-
-# connect flask_db
+# connect sqlite3
 def connect_db():
   conn = sqlite3.connect('studyPi.db')
   c = conn.cursor()
@@ -48,8 +40,8 @@ def connect_db():
   db_list = c.fetchone()
   return db_list
 
-# if __name__ == '__main__':
-def sensor_on():
+# main function
+def sensor():
   start_time = None
   array = [0]*7
   gpio_set()
@@ -100,7 +92,6 @@ def sensor_on():
         finish_time = datetime.now()
         delta_time = finish_time - start_time
         delta_second = delta_time.total_seconds()
-        start_time = None
         user_id = db_list[1]
         user_name = db_list[2]
         date = finish_time.strftime('%Y-%m-%d')
@@ -113,6 +104,7 @@ def sensor_on():
           "time": Ntime
         }
         records = db.child("records").child(user_id).push(push_date)
+        start_time = None
         LED(0)
         RGB(True,False)
         time.sleep(3)
