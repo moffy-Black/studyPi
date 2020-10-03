@@ -1,29 +1,23 @@
 from datetime import datetime
-import time
 import RPi.GPIO as GPIO
-import pyrebase
-import json
+import time
 import sqlite3
 
-with open(('firebaseConfig.json')) as f:
-  firebaseConfig = json.loads(f.read())
-firebase = pyrebase.initialize_app(firebaseConfig)
+from firebase import db
 
-db = firebase.database()
-
+# LED ON or OFF
 def LED(n):
   li = [26,19,13,10,17,12]
-  for i in range(6):
-    GPIO.output(li[i], False)
-  for i in range(n):
-    GPIO.output(li[i], True)
-   
+  [GPIO.output(i, False) for i in li]
+  [GPIO.output(li[i], True) for i in range(n)]
+
+# RGB ON or OFF
 def RGB(x,y):
   GPIO.output(16, x)
   GPIO.output(20, y)
   GPIO.output(21, False)
 
-# GPIO_sensor
+# GPIOPIN set
 def gpio_set():
   GPIO.setmode(GPIO.BCM)
 
@@ -38,9 +32,7 @@ def gpio_set():
   GPIO.setup(20,GPIO.OUT)
   GPIO.setup(21,GPIO.OUT)
 
-  
-
-# connect flask_db
+# connect sqlite3
 def connect_db():
   conn = sqlite3.connect('studyPi.db')
   c = conn.cursor()
@@ -48,8 +40,13 @@ def connect_db():
   db_list = c.fetchone()
   return db_list
 
-# if __name__ == '__main__':
-def sensor_on():
+def calculate(x, y):
+  delta_time = x - y
+  delta_second = delta_time.total_seconds()
+  return delta_second
+
+# main function
+def sensor():
   start_time = None
   array = [0]*7
   gpio_set()
@@ -67,40 +64,37 @@ def sensor_on():
       if start_time is None:
         start_time = datetime.now()
       measure_time = datetime.now()
-      medium_time = measure_time - start_time
-      medium_second = medium_time.total_seconds()
-      if medium_second <= 9:
+      medium_second = calculate(measure_time, start_time)
+      if medium_second <= 900:
         LED(6)
         RGB(False,True)
-      elif medium_second >9 and medium_second <= 18:
+      elif medium_second >900 and medium_second <= 1800:
         LED(5)
         RGB(False,True)
-      elif medium_second >18 and medium_second <= 27:
+      elif medium_second >1800 and medium_second <= 2700:
         LED(4)
         RGB(False,True)
-      elif medium_second >27 and medium_second <= 36:
+      elif medium_second >2700 and medium_second <= 3600:
         LED(3)
         RGB(False,True)
-      elif medium_second >36 and medium_second <= 45:
+      elif medium_second >3600 and medium_second <= 4500:
         LED(2)
         RGB(False,True)
-      elif medium_second >45 and medium_second <= 54:
+      elif medium_second >4500 and medium_second <= 5400:
         LED(1)
         RGB(False,True)
-      elif medium_second >54:
+      elif medium_second >5400:
         LED(0)
         RGB(False,True)
-      time.sleep(3)
+      time.sleep(53)
     else:
       if start_time is None:
         LED(0)
         RGB(True,False)
-        time.sleep(3)
+        time.sleep(53)
       else:
         finish_time = datetime.now()
-        delta_time = finish_time - start_time
-        delta_second = delta_time.total_seconds()
-        start_time = None
+        delta_second = calculate(finish_time, start_time)
         user_id = db_list[1]
         user_name = db_list[2]
         date = finish_time.strftime('%Y-%m-%d')
@@ -112,7 +106,8 @@ def sensor_on():
           "term": term,
           "time": Ntime
         }
-        records = db.child("records").child(user_id).push(push_date)
+        # records = db.child("records").child(user_id).push(push_date)
+        start_time = None
         LED(0)
         RGB(True,False)
-        time.sleep(3)
+        time.sleep(53)
