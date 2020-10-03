@@ -14,7 +14,7 @@ api = responder.API(
 )
 
 class IndexController:
-  async def on_get(self, req, resp):
+  async def on_get(self, req, resp): #HTTP method get
     @api.background.task
     def sensor_on():
       sensor()
@@ -25,14 +25,14 @@ class IndexController:
     resp.content = api.template('index.html',name=displayName)
 
 class LoginController:
-  async def on_get(self, req, resp):
+  async def on_get(self, req, resp): #HTTP method get
     @api.background.task
     def process_remove_data():
       remove_data()
     process_remove_data()
     resp.content = api.template('login.html',msg="")
 
-  async def on_post(self, req, resp):
+  async def on_post(self, req, resp): #HTTP method post
     @api.background.task
     def process_insert_data(localId, name):
       insert_data(localId, name)
