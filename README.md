@@ -1,6 +1,7 @@
 # studyPi
  
  勉強時間を自動計測し、友達と共有できるWebサービス
+ 
  2020年度みんなのラズパイコンテスト学生証受賞作品。https://project.nikkeibp.co.jp/pc/rpic/
  
  
