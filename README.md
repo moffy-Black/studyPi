@@ -5,7 +5,7 @@
  2020年度みんなのラズパイコンテスト学生証受賞作品。https://project.nikkeibp.co.jp/pc/rpic/
 
 # Demo
-[![Watch the video](https://img.youtube.com/vi/nTQUwghvy5Q/default.jpg)](https://www.youtube.com/watch?v=OrJLxV1gePw)
+[![Watch the video](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPIscmGjcsJXbbxGWLANsvSe6r1KlJAlFAow&usqp=CAU)](https://www.youtube.com/watch?v=OrJLxV1gePw)
 
 # Features
 
